@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+  {% if category %}
+     {{ category.description|truncatewords:150 }}
+  {% else %}
+     Welcome to world of shopping with SHOP ME...
+  {% endif %}
+{% endblock %}
+
+
+{% block title %}
+{% if category %}
+       {{category.name}} - SHOP ME
+  {% else %}
+        Here Is Our Collections - SHOP ME
+  {% endif %}
+{% endblock %}
+
+
+{% block content %}
+{% if category %}
+<div>
+    <div class="row my_row_class">
+        <div class="mx-auto">
+        <p><a class="btn btn" href="{% url 'ecomapp:allProdCat' %}">Our Product Collections</a></p>
+       </div>
+    </div>
+</div>
+{% endif %}
+
+
+<div class="mx-auto">
+    {% if category %}
+    <center>
+    <img  class="my_image_cat" src="{{category.image.url}}" alt="{{category.name}}">
+    </center>
+</div>
+<br>
+<div>
+    <h1 class="text-center my_title">{{category.name}}</h1>
+    <p class="text-justify">{{category.description}}</p>
+</div>
+    {% else %}
+<div>
+<img class="my image my_image_padding" src="{% static 'img/banner.png' %}" alt="our products" height="400px;" width="100%">
+</div>
+<br>
+<div>
+    <h1 class="text-center my_title"><b>Our Collections</b></h1>
+    <p class="text-justify">A product is any item or service you sell to serve a customer’s need or want. They can be physical or virtual. Physical products include durable goods (such as cars, furniture, and computers) and nondurable goods (such as food and beverages). Virtual products are offerings of services or experiences (such as education, software, and other digital products). A product may be a hybrid and include both physical and virtual elements. Hybrid products are becoming more common, as traditionally analog products are incorporating digital technology as a way to better reach and serve customers.</p>
+</div>
+  {% endif %}
+<div class="container">
+    <div class="row mx_auto">
+        {% for product in products.object_list %}
+        <div class="my_bottom_margin col-9 col-sm-12  col-md-4 col-lg-4 " >
+            <div class="card text-center" style="min-width:18rem;min-height: 100%;">
+                <a href="{{product.get_url}}"><img class="card-img-top my_image" src="{{product.image.url}}" alt="{{product.name}}"></a>
+                <div class="card-body">
+                    <h4>{{product.name}}</h4>
+                    <p>Rs : {{product.price}}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="mx-auto">
+        {% if products.paginator.num_pages > 1 %}
+       <hr>
+        <div class="text-center">
+             {% for pg in products.paginator.page_range %}
+                <a href="?page={{pg}}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %}">{{pg}}</a>
+             {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <br>
+</div>
+
+{% endblock %}
